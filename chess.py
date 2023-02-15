@@ -32,21 +32,26 @@ class Board:
         self.rank_attacks = defaultdict(int)
 
     def add_queen(self, x, y):
-        self.queens.append((x, y))
+        assert y == len(self.queens)
+        self.queens.append(x)
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] += 1
         self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
     def remove_last_queen(self):
-        x, y = self.queens.pop()
+        x = self.queens.pop()
+        y = len(self.queens)
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] -= 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] -= 1
         self.file_attacks[x] -= 1
         self.rank_attacks[y] -= 1
 
     def can_add_queen(self, x, y):
-        return (x, y) not in self.queens and not self.is_attacked(x, y)
+        # Our caller should know that we are trying to add
+        # the queen to the next empty rank on the board.
+        assert y == len(self.queens)
+        return not self.is_attacked(x, y)
 
     def next_queen_spot(self):
         # We know that any solution has a queen on each rank of the board
@@ -62,7 +67,7 @@ class Board:
         return None
 
     def status(self, x, y):
-        if (x, y) in self.queens:
+        if y < len(self.queens) and self.queens[y] == x:
             return "Q "
         else:
             return "x " if self.is_attacked(x, y) else "- "
