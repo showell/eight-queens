@@ -96,28 +96,26 @@ class Board:
     def is_done(self):
         return len(self.queens) == self.n
 
+    def coords(self):
+        return [(x, y) for y, x in enumerate(self.queens)]
+
 def add_queens_to_board(board):
     if board.is_done():
-        return True
+        yield board.coords()
 
     for x in board.possible_queen_spots():
         board.add_queen_to_next_rank(x)
-        success = add_queens_to_board(board)
-
-        if success:
-            return True
+        for solution in add_queens_to_board(board):
+            yield solution
 
         board.remove_last_queen()
 
-    return False
-    
-
 N = 8
 board = Board(n=N)
-is_done = add_queens_to_board(board)
-print_board(board.status, n=N)
+solutions = list(add_queens_to_board(board))
+assert len(solutions) == 92
+for solution in solutions:
+    print(solution)
 
-if is_done:
-    print("DONE!")
-else:
-    print(f"DARN!!!! partial solution: {board.num_queens()} out of {N}")
+print("board is actually empty after our entire traversal!")
+print_board(board.status, n=N)
