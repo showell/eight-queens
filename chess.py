@@ -72,13 +72,9 @@ class Board:
         x = len(self.queens)
 
         if x >= self.n:
-            return
+            return []
 
-        for y in range(self.n):
-            if self.can_add_queen(x, y):
-                yield y
-
-        return
+        return [y for y in range(self.n) if self.can_add_queen(x, y)]
 
     def status(self, x, y):
         if x < len(self.queens) and self.queens[x] == y:
