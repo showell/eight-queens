@@ -17,30 +17,30 @@ def print_board(square, *, n):
     print(s)
 
 class QueenMatingNet:
+    # We keep track of which diagonals and ranks are being attacked by
+    # queens. Note that we DO NOT check for attacks along
+    # files, since we rely on our caller NEVER to place two
+    # queens on the same file.
 
     def __init__(self):
         self.sw_ne_attacks = defaultdict(int)
         self.nw_se_attacks = defaultdict(int)
-        self.file_attacks = defaultdict(int)
         self.rank_attacks = defaultdict(int)
 
     def add_queen(self, x, y):
         self.sw_ne_attacks[x - y] += 1
         self.nw_se_attacks[x + y] += 1
-        self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
     def remove_queen(self, x, y):
         self.sw_ne_attacks[x - y] -= 1
         self.nw_se_attacks[x + y] -= 1
-        self.file_attacks[x] -= 1
         self.rank_attacks[y] -= 1
 
     def is_attacked(self, x, y):
         return (
             self.sw_ne_attacks[x - y] or
             self.nw_se_attacks[x + y] or
-            self.file_attacks[x] or 
             self.rank_attacks[y]
         )
 
