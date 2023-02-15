@@ -81,17 +81,18 @@ class Board:
     def num_queens(self):
         return len(self.queens)
 
+def add_queens_to_board(board):
+    queen_loc = board.next_queen_spot()
+    if queen_loc is None:
+        return
+    board.add_queen(*queen_loc)
+    print(f"Added queen to {queen_loc}")
+    add_queens_to_board(board)
+    
 
 N = 8
 board = Board(n=N)
-
-while True:
-    queen_loc = board.next_queen_spot()
-    if queen_loc is None:
-        break
-    print(f"Added queen to {queen_loc}")
-    board.add_queen(*queen_loc)
-
+add_queens_to_board(board)
 print_board(board.status, n=N)
 
 if board.num_queens() < N:
