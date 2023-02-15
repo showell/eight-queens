@@ -99,12 +99,17 @@ class Board:
 def add_queens_to_board(board):
     if board.is_done():
         return True
-    queen_spots = list(board.possible_queen_spots())
-    if not queen_spots:
-        return False
-    x = queen_spots[0]
-    board.add_queen_to_next_rank(x)
-    return add_queens_to_board(board)
+
+    for x in board.possible_queen_spots():
+        board.add_queen_to_next_rank(x)
+        success = add_queens_to_board(board)
+
+        if success:
+            return True
+
+        board.remove_last_queen()
+
+    return False
     
 
 N = 8
