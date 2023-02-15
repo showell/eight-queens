@@ -38,6 +38,13 @@ class Board:
         self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
+    def remove_last_queen(self):
+        x, y = self.queens.pop()
+        self.sw_ne_attacks[sw_ne_diagonal(x, y)] -= 1
+        self.nw_se_attacks[nw_se_diagonal(x, y)] -= 1
+        self.file_attacks[x] -= 1
+        self.rank_attacks[y] -= 1
+
     def can_add_queen(self, x, y):
         return (x, y) not in self.queens and not self.is_attacked(x, y)
 
@@ -84,6 +91,9 @@ class Board:
 def add_queens_to_board(board):
     queen_loc = board.next_queen_spot()
     if queen_loc is None:
+        # SUPER HACKY, we will just remove the last
+        # queen so we can diagnose the issue
+        board.remove_last_queen()
         return
     board.add_queen(*queen_loc)
     print(f"Added queen to {queen_loc}")
