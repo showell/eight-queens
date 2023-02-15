@@ -53,18 +53,18 @@ class Board:
         assert y == len(self.queens)
         return not self.is_attacked(x, y)
 
-    def next_queen_spot(self):
+    def possible_queen_spots(self):
         # We know that any solution has a queen on each rank of the board
         y = len(self.queens)
 
         if y >= self.n:
-            return None
+            return
 
         for x in range(self.n):
             if self.can_add_queen(x, y):
-                return (x, y)
+                yield (x, y)
 
-        return None
+        return
 
     def status(self, x, y):
         if y < len(self.queens) and self.queens[y] == x:
@@ -94,12 +94,10 @@ class Board:
         return len(self.queens)
 
 def add_queens_to_board(board):
-    queen_loc = board.next_queen_spot()
-    if queen_loc is None:
+    queen_spots = list(board.possible_queen_spots())
+    if not queen_spots:
         return
-    if board.num_queens() == 3:
-        # HACK!!!!
-        queen_loc = (6, 3)
+    queen_loc = queen_spots[0]
     board.add_queen(*queen_loc)
     print(f"Added queen to {queen_loc}")
     add_queens_to_board(board)
