@@ -99,16 +99,29 @@ class Board:
     def coords(self):
         return [(x, y) for x, y in enumerate(self.queens)]
 
+def solve(*, is_done, node_value, child_nodes, add_node, remove_node):
+    def run():
+        if is_done():
+            yield node_value()
+
+        for child_node in child_nodes():
+            add_node(child_node)
+            for solution in run():
+                yield solution
+
+            remove_node()
+
+    for solution in run():
+        yield solution
+
 def add_queens_to_board(board):
-    if board.is_done():
-        yield board.coords()
-
-    for x in board.possible_queen_spots():
-        board.add_queen_to_next_file(x)
-        for solution in add_queens_to_board(board):
-            yield solution
-
-        board.remove_last_queen()
+    for solution in solve(
+            is_done=board.is_done,
+            node_value=board.coords,
+            child_nodes=board.possible_queen_spots,
+            add_node=board.add_queen_to_next_file,
+            remove_node=board.remove_last_queen):
+        yield solution
 
 N = 8
 board = Board(n=N)
