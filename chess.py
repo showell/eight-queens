@@ -7,15 +7,16 @@ def sw_ne_diagonal(x, y):
 def nw_se_diagonal(x, y):
     return x + y
 
-def print_board(square):
-    for y in reversed(range(8)):
-        for x in range(8):
+def print_board(square, *, n):
+    for y in reversed(range(n)):
+        for x in range(n):
             print(square(x, y), end='')
         print()
 
 class Board:
-    def __init__(self):
+    def __init__(self, *, n):
         self.queens = []
+        self.n = n
         self.sw_ne_attacks = defaultdict(int)
         self.nw_se_attacks = defaultdict(int)
         self.file_attacks = defaultdict(int)
@@ -35,8 +36,7 @@ class Board:
         # We know that any solution has a queen on each rank of the board
         y = len(self.queens)
 
-        # TODO: stop hard coding 8
-        for x in range(8):
+        for x in range(self.n):
             if self.can_add_queen(x, y):
                 return (x, y)
 
@@ -67,9 +67,10 @@ class Board:
         )
 
 
-board = Board()
+N = 8
+board = Board(n=N)
 board.add_queen(0, 0)
 queen_loc2 = board.next_queen_spot()
 print(f"Added queen to {queen_loc2}")
 board.add_queen(*queen_loc2)
-print_board(board.status)
+print_board(board.status, n=N)
