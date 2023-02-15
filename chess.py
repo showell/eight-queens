@@ -1,12 +1,6 @@
 # Tested with Python 3.10.7
 from collections import defaultdict
 
-def sw_ne_diagonal(x, y):
-    return x - y
-
-def nw_se_diagonal(x, y):
-    return x + y
-
 def print_board(square, *, n):
     s = "\nY\n"
     for y in reversed(range(n)):
@@ -23,6 +17,7 @@ def print_board(square, *, n):
     print(s)
 
 class QueenMatingNet:
+
     def __init__(self):
         self.sw_ne_attacks = defaultdict(int)
         self.nw_se_attacks = defaultdict(int)
@@ -30,21 +25,21 @@ class QueenMatingNet:
         self.rank_attacks = defaultdict(int)
 
     def add_queen(self, x, y):
-        self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
-        self.nw_se_attacks[nw_se_diagonal(x, y)] += 1
+        self.sw_ne_attacks[x - y] += 1
+        self.nw_se_attacks[x + y] += 1
         self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
     def remove_queen(self, x, y):
-        self.sw_ne_attacks[sw_ne_diagonal(x, y)] -= 1
-        self.nw_se_attacks[nw_se_diagonal(x, y)] -= 1
+        self.sw_ne_attacks[x - y] -= 1
+        self.nw_se_attacks[x + y] -= 1
         self.file_attacks[x] -= 1
         self.rank_attacks[y] -= 1
 
     def is_attacked(self, x, y):
         return (
-            self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
-            self.nw_se_attacks[nw_se_diagonal(x, y)] or
+            self.sw_ne_attacks[x - y] or
+            self.nw_se_attacks[x + y] or
             self.file_attacks[x] or 
             self.rank_attacks[y]
         )
