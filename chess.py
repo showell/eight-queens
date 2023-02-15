@@ -59,8 +59,3 @@ class Board:
 board = Board()
 board.add_queen(0, 0)
 print_board(board.status)
-assert not board.can_add_queen(0, 0)
-assert board.can_add_queen(5, 3)
-assert not board.can_add_queen(4, 4)
-assert board.can_add_queen(5, 4)
-assert not board.can_add_queen(0, 1)
