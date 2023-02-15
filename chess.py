@@ -31,6 +31,17 @@ class Board:
     def can_add_queen(self, x, y):
         return (x, y) not in self.queens and not self.is_attacked(x, y)
 
+    def next_queen_spot(self):
+        # We know that any solution has a queen on each rank of the board
+        y = len(self.queens)
+
+        # TODO: stop hard coding 8
+        for x in range(8):
+            if self.can_add_queen(x, y):
+                return (x, y)
+
+        return None
+
     def status(self, x, y):
         if (x, y) in self.queens:
             return "Q "
@@ -58,4 +69,7 @@ class Board:
 
 board = Board()
 board.add_queen(0, 0)
+queen_loc2 = board.next_queen_spot()
+print(f"Added queen to {queen_loc2}")
+board.add_queen(*queen_loc2)
 print_board(board.status)
