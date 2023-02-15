@@ -28,20 +28,40 @@ class Board:
         self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
+    def can_add_queen(self, x, y):
+        return (x, y) not in self.queens and not self.is_attacked(x, y)
+
     def status(self, x, y):
         if (x, y) in self.queens:
             return "Q "
         else:
-            num_attacks = (
-                self.sw_ne_attacks[sw_ne_diagonal(x, y)] +
-                self.nw_se_attacks[nw_se_diagonal(x, y)] +
-                self.file_attacks[x] +
-                self.rank_attacks[y]
-            )
-            return f"{num_attacks} "
+            return "x " if self.is_attacked(x, y) else "- "
+
+    def num_attacks_on(self, x, y):
+        # similar to is_attacked, but useful for debugging actual counts
+        # (we may end up deleting this later)
+        return (
+            self.sw_ne_attacks[sw_ne_diagonal(x, y)] +
+            self.nw_se_attacks[nw_se_diagonal(x, y)] +
+            self.file_attacks[x] +
+            self.rank_attacks[y]
+        )
+
+    def is_attacked(self, x, y):
+        return (
+            self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
+            self.nw_se_attacks[nw_se_diagonal(x, y)] or
+            self.file_attacks[x] or 
+            self.rank_attacks[y]
+        )
 
 
 board = Board()
 board.add_queen(5, 3)
 board.add_queen(7, 0)
 print_board(board.status)
+assert not board.can_add_queen(0, 0)
+assert not board.can_add_queen(5, 3)
+assert not board.can_add_queen(4, 4)
+assert not board.can_add_queen(5, 4)
+assert board.can_add_queen(0, 1)
