@@ -31,8 +31,8 @@ class Board:
         self.file_attacks = defaultdict(int)
         self.rank_attacks = defaultdict(int)
 
-    def add_queen(self, x, y):
-        assert y == len(self.queens)
+    def add_queen_to_next_rank(self, x):
+        y = len(self.queens)
         self.queens.append(x)
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] += 1
@@ -62,7 +62,7 @@ class Board:
 
         for x in range(self.n):
             if self.can_add_queen(x, y):
-                yield (x, y)
+                yield x
 
         return
 
@@ -102,9 +102,8 @@ def add_queens_to_board(board):
     queen_spots = list(board.possible_queen_spots())
     if not queen_spots:
         return False
-    queen_loc = queen_spots[0]
-    board.add_queen(*queen_loc)
-    print(f"Added queen to {queen_loc}")
+    x = queen_spots[0]
+    board.add_queen_to_next_rank(x)
     return add_queens_to_board(board)
     
 
