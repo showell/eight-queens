@@ -72,16 +72,6 @@ class Board:
         else:
             return "x " if self.is_attacked(x, y) else "- "
 
-    def num_attacks_on(self, x, y):
-        # similar to is_attacked, but useful for debugging actual counts
-        # (we may end up deleting this later)
-        return (
-            self.sw_ne_attacks[sw_ne_diagonal(x, y)] +
-            self.nw_se_attacks[nw_se_diagonal(x, y)] +
-            self.file_attacks[x] +
-            self.rank_attacks[y]
-        )
-
     def is_attacked(self, x, y):
         return (
             self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
