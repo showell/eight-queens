@@ -17,16 +17,21 @@ class Board:
     def __init__(self):
         self.queens = []
         self.sw_ne_attacks = defaultdict(int)
+        self.nw_se_attacks = defaultdict(int)
 
     def add_queen(self, x, y):
         self.queens.append((x, y))
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
+        self.nw_se_attacks[nw_se_diagonal(x, y)] += 1
 
     def status(self, x, y):
         if (x, y) in self.queens:
             return "Q "
         else:
-            num_attacks = self.sw_ne_attacks[sw_ne_diagonal(x, y)]
+            num_attacks = (
+                self.sw_ne_attacks[sw_ne_diagonal(x, y)] +
+                self.nw_se_attacks[nw_se_diagonal(x, y)]
+            )
             return f"{num_attacks} "
 
 
