@@ -16,7 +16,7 @@ def print_board(square, *, n):
     s += "X\n"
     print(s)
 
-class QueenMatingNet:
+class QueenAttackNet:
     # We keep track of which diagonals and ranks are being attacked by
     # queens. Note that we DO NOT check for attacks along
     # files, since we rely on our caller NEVER to place two
@@ -49,17 +49,17 @@ class Board:
     def __init__(self, *, n):
         self.queens = []
         self.n = n
-        self.mating_net = QueenMatingNet()
+        self.attack_net = QueenAttackNet()
 
     def add_queen_to_next_file(self, y):
         x = len(self.queens)
         self.queens.append(y)
-        self.mating_net.add_queen(x, y)
+        self.attack_net.add_queen(x, y)
 
     def remove_last_queen(self):
         y = self.queens.pop()
         x = len(self.queens)
-        self.mating_net.remove_queen(x, y)
+        self.attack_net.remove_queen(x, y)
 
     def can_add_queen(self, x, y):
         # Our caller should know that we are trying to add
@@ -83,7 +83,7 @@ class Board:
             return "x " if self.is_attacked(x, y) else "- "
 
     def is_attacked(self, x, y):
-        return self.mating_net.is_attacked(x, y)
+        return self.attack_net.is_attacked(x, y)
 
     def num_queens(self):
         return len(self.queens)
