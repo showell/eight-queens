@@ -1,4 +1,5 @@
 # Tested with Python 3.10.7
+from collections import defaultdict
 
 def sw_ne_diagonal(x, y):
     return x - y
@@ -15,15 +16,18 @@ def print_board(square):
 class Board:
     def __init__(self):
         self.queens = []
+        self.sw_ne_attacks = defaultdict(int)
 
     def add_queen(self, x, y):
         self.queens.append((x, y))
+        self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
 
     def status(self, x, y):
         if (x, y) in self.queens:
             return "Q "
         else:
-            return "_ "
+            num_attacks = self.sw_ne_attacks[sw_ne_diagonal(x, y)]
+            return f"{num_attacks} "
 
 
 board = Board()
