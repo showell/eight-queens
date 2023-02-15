@@ -83,11 +83,9 @@ class Board:
         )
 
     def is_attacked(self, x, y):
-        # TODO: restore logic for queen diagonals.  We are cheating
-        #       to make them behave like rooks for the moment.
         return (
-            # self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
-            # self.nw_se_attacks[nw_se_diagonal(x, y)] or
+            self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
+            self.nw_se_attacks[nw_se_diagonal(x, y)] or
             self.file_attacks[x] or 
             self.rank_attacks[y]
         )
@@ -95,20 +93,27 @@ class Board:
     def num_queens(self):
         return len(self.queens)
 
+    def is_done(self):
+        return len(self.queens) == self.n
+
 def add_queens_to_board(board):
+    if board.is_done():
+        return True
     queen_spots = list(board.possible_queen_spots())
     if not queen_spots:
-        return
+        return False
     queen_loc = queen_spots[0]
     board.add_queen(*queen_loc)
     print(f"Added queen to {queen_loc}")
-    add_queens_to_board(board)
+    return add_queens_to_board(board)
     
 
 N = 8
 board = Board(n=N)
-add_queens_to_board(board)
+is_done = add_queens_to_board(board)
 print_board(board.status, n=N)
 
-if board.num_queens() < N:
+if is_done:
+    print("DONE!")
+else:
     print(f"DARN!!!! partial solution: {board.num_queens()} out of {N}")
