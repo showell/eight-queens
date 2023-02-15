@@ -22,30 +22,49 @@ def print_board(square, *, n):
     s += "X\n"
     print(s)
 
-class Board:
-    def __init__(self, *, n):
-        self.queens = []
-        self.n = n
+class QueenMatingNet:
+    def __init__(self):
         self.sw_ne_attacks = defaultdict(int)
         self.nw_se_attacks = defaultdict(int)
         self.file_attacks = defaultdict(int)
         self.rank_attacks = defaultdict(int)
 
-    def add_queen_to_next_file(self, y):
-        x = len(self.queens)
-        self.queens.append(y)
+    def add_queen(self, x, y):
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] += 1
         self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
-    def remove_last_queen(self):
-        y = self.queens.pop()
-        x = len(self.queens)
+    def remove_queen(self, x, y):
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] -= 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] -= 1
         self.file_attacks[x] -= 1
         self.rank_attacks[y] -= 1
+
+    def is_attacked(self, x, y):
+        return (
+            self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
+            self.nw_se_attacks[nw_se_diagonal(x, y)] or
+            self.file_attacks[x] or 
+            self.rank_attacks[y]
+        )
+
+
+class Board:
+    def __init__(self, *, n):
+        self.queens = []
+        self.n = n
+        self.mating_net = QueenMatingNet()
+
+    def add_queen_to_next_file(self, y):
+        x = len(self.queens)
+        self.queens.append(y)
+        self.mating_net.add_queen(x, y)
+
+    def remove_last_queen(self):
+        y = self.queens.pop()
+        x = len(self.queens)
+        self.mating_net.remove_queen(x, y)
 
     def can_add_queen(self, x, y):
         # Our caller should know that we are trying to add
@@ -73,12 +92,7 @@ class Board:
             return "x " if self.is_attacked(x, y) else "- "
 
     def is_attacked(self, x, y):
-        return (
-            self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
-            self.nw_se_attacks[nw_se_diagonal(x, y)] or
-            self.file_attacks[x] or 
-            self.rank_attacks[y]
-        )
+        return self.mating_net.is_attacked(x, y)
 
     def num_queens(self):
         return len(self.queens)
