@@ -85,7 +85,6 @@ class Board:
 N = 8
 board = Board(n=N)
 
-board.add_queen(0, 0)
 while True:
     queen_loc = board.next_queen_spot()
     if queen_loc is None:
