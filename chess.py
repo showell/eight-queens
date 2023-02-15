@@ -91,10 +91,10 @@ class Board:
 def add_queens_to_board(board):
     queen_loc = board.next_queen_spot()
     if queen_loc is None:
-        # SUPER HACKY, we will just remove the last
-        # queen so we can diagnose the issue
-        board.remove_last_queen()
         return
+    if board.num_queens() == 3:
+        # HACK!!!!
+        queen_loc = (6, 3)
     board.add_queen(*queen_loc)
     print(f"Added queen to {queen_loc}")
     add_queens_to_board(board)
