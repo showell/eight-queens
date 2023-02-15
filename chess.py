@@ -36,6 +36,9 @@ class Board:
         # We know that any solution has a queen on each rank of the board
         y = len(self.queens)
 
+        if y >= self.n:
+            return None
+
         for x in range(self.n):
             if self.can_add_queen(x, y):
                 return (x, y)
@@ -66,11 +69,21 @@ class Board:
             self.rank_attacks[y]
         )
 
+    def num_queens(self):
+        return len(self.queens)
+
 
 N = 8
 board = Board(n=N)
 board.add_queen(0, 0)
-queen_loc2 = board.next_queen_spot()
-print(f"Added queen to {queen_loc2}")
-board.add_queen(*queen_loc2)
+while True:
+    queen_loc = board.next_queen_spot()
+    if queen_loc is None:
+        break
+    print(f"Added queen to {queen_loc}")
+    board.add_queen(*queen_loc)
+
 print_board(board.status, n=N)
+
+if board.num_queens() < N:
+    print("DARN!!!! partial solution")
