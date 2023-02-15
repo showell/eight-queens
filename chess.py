@@ -61,12 +61,6 @@ class Board:
         x = len(self.queens)
         self.attack_net.remove_queen(x, y)
 
-    def can_add_queen(self, x, y):
-        # Our caller should know that we are trying to add
-        # the queen to the next empty file on the board.
-        assert x == len(self.queens)
-        return not self.is_attacked(x, y)
-
     def possible_queen_spots(self):
         # We know that any solution has a queen on each file of the board
         x = len(self.queens)
@@ -74,7 +68,7 @@ class Board:
         if x >= self.n:
             return []
 
-        return [y for y in range(self.n) if self.can_add_queen(x, y)]
+        return [y for y in range(self.n) if not self.is_attacked(x, y)]
 
     def status(self, x, y):
         if x < len(self.queens) and self.queens[x] == y:
