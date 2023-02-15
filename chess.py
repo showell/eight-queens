@@ -8,10 +8,19 @@ def nw_se_diagonal(x, y):
     return x + y
 
 def print_board(square, *, n):
+    s = "\nY\n"
     for y in reversed(range(n)):
+        s += f"{y} "
         for x in range(n):
-            print(square(x, y), end='')
-        print()
+            s += square(x, y)
+        s += "\n"
+
+    s += "  "
+    for x in range(n):
+        s += f"{x} "
+
+    s += "X\n"
+    print(s)
 
 class Board:
     def __init__(self, *, n):
@@ -75,6 +84,7 @@ class Board:
 
 N = 8
 board = Board(n=N)
+
 board.add_queen(0, 0)
 while True:
     queen_loc = board.next_queen_spot()
@@ -86,4 +96,4 @@ while True:
 print_board(board.status, n=N)
 
 if board.num_queens() < N:
-    print("DARN!!!! partial solution")
+    print(f"DARN!!!! partial solution: {board.num_queens()} out of {N}")
