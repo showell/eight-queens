@@ -83,9 +83,11 @@ class Board:
         )
 
     def is_attacked(self, x, y):
+        # TODO: restore logic for queen diagonals.  We are cheating
+        #       to make them behave like rooks for the moment.
         return (
-            self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
-            self.nw_se_attacks[nw_se_diagonal(x, y)] or
+            # self.sw_ne_attacks[sw_ne_diagonal(x, y)] or
+            # self.nw_se_attacks[nw_se_diagonal(x, y)] or
             self.file_attacks[x] or 
             self.rank_attacks[y]
         )
