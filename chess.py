@@ -12,4 +12,21 @@ def print_board(square):
             print(square(x, y), end='')
         print()
 
-print("OK")
+class Board:
+    def __init__(self):
+        self.queens = []
+
+    def add_queen(self, x, y):
+        self.queens.append((x, y))
+
+    def status(self, x, y):
+        if (x, y) in self.queens:
+            return "Q "
+        else:
+            return "_ "
+
+
+board = Board()
+board.add_queen(5, 3)
+board.add_queen(7, 0)
+print_board(board.status)
