@@ -88,29 +88,28 @@ class Board:
     def coords(self):
         return [(x, y) for x, y in enumerate(self.queens)]
 
-def solve(*, is_done, node_value, child_nodes, add_node, remove_node):
-    def run():
-        if is_done():
-            yield node_value()
+def visit(*, child_nodes, visit_child, unvisit_child):
+    def visit_subtree():
+        yield None
 
         for child_node in child_nodes():
-            add_node(child_node)
-            for solution in run():
-                yield solution
+            visit_child(child_node)
+            for checkpoint in visit_subtree():
+                yield None
 
-            remove_node()
+            unvisit_child()
+            yield None
 
-    for solution in run():
-        yield solution
+    for solution in visit_subtree():
+        yield None
 
 def add_queens_to_board(board):
-    for solution in solve(
-            is_done=board.is_done,
-            node_value=board.coords,
+    for checkpoint in visit(
             child_nodes=board.possible_queen_spots,
-            add_node=board.add_queen_to_next_file,
-            remove_node=board.remove_last_queen):
-        yield solution
+            visit_child=board.add_queen_to_next_file,
+            unvisit_child=board.remove_last_queen):
+        if board.is_done():
+            yield board.coords()
 
 N = 8
 board = Board(n=N)
