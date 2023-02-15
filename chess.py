@@ -1,4 +1,5 @@
 # Tested with Python 3.10.7
+import sys, os, time
 from collections import defaultdict
 
 def print_board(square, *, n):
@@ -73,8 +74,10 @@ class Board:
     def status(self, x, y):
         if x < len(self.queens) and self.queens[x] == y:
             return "Q "
+        elif x < len(self.queens):
+            return "  "
         else:
-            return "x " if self.is_attacked(x, y) else "- "
+            return "* " if self.is_attacked(x, y) else "  "
 
     def is_attacked(self, x, y):
         return self.attack_net.is_attacked(x, y)
@@ -104,19 +107,37 @@ def visit(*, child_nodes, visit_child, unvisit_child):
         yield None
 
 def add_queens_to_board(board):
+    interval = 0.08
+    successes = 0
+    interactive = len(sys.argv) > 1
+
     for checkpoint in visit(
             child_nodes=board.possible_queen_spots,
             visit_child=board.add_queen_to_next_file,
             unvisit_child=board.remove_last_queen):
+        if interactive:
+            if successes < 3:
+                os.system("clear")
+                print_board(board.status, n=board.n)
+                time.sleep(interval)
+            if board.is_done():
+                successes += 1
+                os.system("clear")
+                print_board(board.status, n=board.n)
+                print(f"WOOT!!!!!! solution #{successes} was found")
+                interval /= 4
+                input()
         if board.is_done():
             yield board.coords()
+
+    if interactive:
+        print("enter y to stop")
+        while input() != "y":
+            pass
 
 N = 8
 board = Board(n=N)
 solutions = list(add_queens_to_board(board))
 assert len(solutions) == 92
-for solution in solutions:
-    print(solution)
 
-print("board is actually empty after our entire traversal!")
-print_board(board.status, n=N)
+print("DONE!!!!!")
