@@ -31,17 +31,17 @@ class Board:
         self.file_attacks = defaultdict(int)
         self.rank_attacks = defaultdict(int)
 
-    def add_queen_to_next_rank(self, x):
-        y = len(self.queens)
-        self.queens.append(x)
+    def add_queen_to_next_file(self, y):
+        x = len(self.queens)
+        self.queens.append(y)
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] += 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] += 1
         self.file_attacks[x] += 1
         self.rank_attacks[y] += 1
 
     def remove_last_queen(self):
-        x = self.queens.pop()
-        y = len(self.queens)
+        y = self.queens.pop()
+        x = len(self.queens)
         self.sw_ne_attacks[sw_ne_diagonal(x, y)] -= 1
         self.nw_se_attacks[nw_se_diagonal(x, y)] -= 1
         self.file_attacks[x] -= 1
@@ -49,25 +49,25 @@ class Board:
 
     def can_add_queen(self, x, y):
         # Our caller should know that we are trying to add
-        # the queen to the next empty rank on the board.
-        assert y == len(self.queens)
+        # the queen to the next empty file on the board.
+        assert x == len(self.queens)
         return not self.is_attacked(x, y)
 
     def possible_queen_spots(self):
-        # We know that any solution has a queen on each rank of the board
-        y = len(self.queens)
+        # We know that any solution has a queen on each file of the board
+        x = len(self.queens)
 
-        if y >= self.n:
+        if x >= self.n:
             return
 
-        for x in range(self.n):
+        for y in range(self.n):
             if self.can_add_queen(x, y):
-                yield x
+                yield y
 
         return
 
     def status(self, x, y):
-        if y < len(self.queens) and self.queens[y] == x:
+        if x < len(self.queens) and self.queens[x] == y:
             return "Q "
         else:
             return "x " if self.is_attacked(x, y) else "- "
@@ -97,14 +97,14 @@ class Board:
         return len(self.queens) == self.n
 
     def coords(self):
-        return [(x, y) for y, x in enumerate(self.queens)]
+        return [(x, y) for x, y in enumerate(self.queens)]
 
 def add_queens_to_board(board):
     if board.is_done():
         yield board.coords()
 
     for x in board.possible_queen_spots():
-        board.add_queen_to_next_rank(x)
+        board.add_queen_to_next_file(x)
         for solution in add_queens_to_board(board):
             yield solution
 
