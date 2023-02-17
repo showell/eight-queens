@@ -1,6 +1,7 @@
 # Tested with Python 3.10.7
 from collections import defaultdict
 
+
 class QueenAttackNet:
     # We keep track of which diagonals and ranks are being attacked by
     # queens. Note that we DO NOT check for attacks along
@@ -24,9 +25,9 @@ class QueenAttackNet:
 
     def is_attacked(self, x, y):
         return (
-            self.sw_ne_attacks[x - y] or
-            self.nw_se_attacks[x + y] or
-            self.rank_attacks[y]
+            self.sw_ne_attacks[x - y]
+            or self.nw_se_attacks[x + y]
+            or self.rank_attacks[y]
         )
 
 
@@ -64,6 +65,7 @@ class Board:
     def coords(self):
         return [(x, y) for x, y in enumerate(self.queens)]
 
+
 def visit(*, child_nodes, visit_child, unvisit_child):
     def visit_subtree():
         yield None
@@ -79,13 +81,16 @@ def visit(*, child_nodes, visit_child, unvisit_child):
     for solution in visit_subtree():
         yield None
 
+
 def add_queens_to_board(board):
     for checkpoint in visit(
-            child_nodes=board.possible_queen_spots,
-            visit_child=board.add_queen_to_next_file,
-            unvisit_child=board.remove_last_queen):
+        child_nodes=board.possible_queen_spots,
+        visit_child=board.add_queen_to_next_file,
+        unvisit_child=board.remove_last_queen,
+    ):
         if board.is_done():
             yield board.coords()
+
 
 N = 8
 board = Board(n=N)
